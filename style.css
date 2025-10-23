@@ -1,3 +1,4 @@
+/* ========== Base Styles ========== */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -5,8 +6,9 @@ body {
   color: #333;
 }
 
+/* ========== Header & Navigation ========== */
 header {
-  background: url('assets/images/farm-bg.jpg') no-repeat center center/cover;
+  background: url('assets/images/farm-bg.jpg') no-repeat center center / cover;
   color: white;
   padding: 2rem;
   text-align: center;
@@ -35,6 +37,7 @@ nav a {
   font-weight: bold;
 }
 
+/* ========== Hero Section ========== */
 .hero h2 {
   font-size: 2.5rem;
   margin-top: 1rem;
@@ -54,7 +57,11 @@ nav a {
   border-radius: 5px;
 }
 
-.features, .workflow, .app, .contact {
+/* ========== Main Sections ========== */
+.features,
+.workflow,
+.app,
+.contact {
   padding: 2rem;
   background: white;
   margin: 1rem;
@@ -81,13 +88,15 @@ nav a {
   margin: 0.5rem 0;
 }
 
+/* ========== Contact Form ========== */
 .contact form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.contact input, .contact textarea {
+.contact input,
+.contact textarea {
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -101,12 +110,15 @@ nav a {
   border-radius: 5px;
 }
 
+/* ========== Footer ========== */
 footer {
   text-align: center;
   padding: 1rem;
   background: #222;
   color: white;
 }
+
+/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
   nav ul {
     flex-direction: column;
@@ -121,7 +133,8 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .workflow ol, .app ul {
+  .workflow ol,
+  .app ul {
     padding-left: 1rem;
   }
 
@@ -129,29 +142,38 @@ footer {
     padding: 1rem;
   }
 }
-/* Fade-in animation */
+
+/* ========== Animations ========== */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 section {
   animation: fadeIn 1s ease-in-out;
 }
 
-/* Button hover effect */
-.cta:hover, .contact button:hover {
+.cta:hover,
+.contact button:hover {
   background-color: #218838;
   transform: scale(1.05);
   transition: all 0.3s ease;
 }
 
-
+/* ========== Loader Spinner ========== */
 #loader {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(255,255,255,0.9);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -162,21 +184,34 @@ section {
   border: 6px solid #ccc;
   border-top: 6px solid #28a745;
   border-radius: 50%;
-  width: 50px; height: 50px;
+  width: 50px;
+  height: 50px;
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
+/* ========== Sensor Icon Animation ========== */
 .sensor-icon img {
   width: 80px;
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.8; }
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
 }

@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Irrigation System</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </head>
 <body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Header -->
   <header>
     <nav>
       <h1>Smart Irrigation</h1>
@@ -24,7 +32,9 @@
     </section>
   </header>
 
+  <!-- Main Content -->
   <main>
+    <!-- Features -->
     <section id="features" class="features">
       <h2>Key Features</h2>
       <div class="grid">
@@ -35,6 +45,7 @@
       </div>
     </section>
 
+    <!-- Workflow -->
     <section id="how-it-works" class="workflow">
       <h2>How It Works</h2>
       <ol>
@@ -46,6 +57,7 @@
       </ol>
     </section>
 
+    <!-- App Features -->
     <section id="app" class="app">
       <h2>Mobile App Features</h2>
       <ul>
@@ -57,67 +69,80 @@
       </ul>
     </section>
 
+    <!-- Sensor Icon -->
+    <div class="sensor-icon">
+      <img src="assets/images/sensor.png" alt="Sensor" />
+    </div>
+
+    <!-- Weather Widget -->
+    <div id="weather-widget">
+      <h3>🌤 Weather in Patiala</h3>
+      <p id="weather-info">Loading...</p>
+    </div>
+
+    <!-- Contact Form -->
     <section id="contact" class="contact">
       <h2>Contact Us</h2>
-      <form>
-        <input type="text" placeholder="Your Name" required />
-        <input type="email" placeholder="Your Email" required />
-        <textarea placeholder="Your Message" required></textarea>
+      <form onsubmit="sendEmail(event)">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="user_email" placeholder="Your Email" required />
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <input type="text" name="crop_type" placeholder="Crop Type (optional)" />
+        <input type="text" name="field_size" placeholder="Field Size (optional)" />
+        <select name="irrigation_mode">
+          <option value="">Select Irrigation Mode</option>
+          <option value="Manual">Manual</option>
+          <option value="Automated">Automated</option>
+        </select>
+        <input type="hidden" name="time" id="form-time" />
         <button type="submit">Send Message</button>
       </form>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
     <p>&copy; 2025 Smart Irrigation System. All rights reserved.</p>
   </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Hide loader on page load
+    window.addEventListener("load", () => {
+      document.getElementById("loader").style.display = "none";
+    });
+
+    // Initialize EmailJS
+    (function() {
+      emailjs.init("ZXs__9flqZ8yveoPc");
+    })();
+
+    // Set timestamp
+    document.getElementById("form-time").value = new Date().toLocaleString();
+
+    // Send email
+    function sendEmail(e) {
+      e.preventDefault();
+      emailjs.sendForm("service_gzjld7p", "template_wbop5tf", e.target)
+        .then(() => alert("Message sent!"))
+        .catch(() => alert("Failed to send"));
+    }
+
+    // Fetch weather data
+    const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
+    const city = "Patiala";
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+      .then(res => res.json())
+      .then(data => {
+        const temp = data.main.temp;
+        const desc = data.weather[0].description;
+        document.getElementById("weather-info").textContent = `${temp}°C, ${desc}`;
+      })
+      .catch(() => {
+        document.getElementById("weather-info").textContent = "Unable to fetch weather.";
+      });
+  </script>
+
 </body>
 </html>
-
-
-//emailjs use krna  h//
-<form action="https://formsubmit.co/adityaa172007@gmail.com" method="POST">
-  <input type="text" name="name" placeholder="Your Name" required />
-  <input type="email" name="email" placeholder="Your Email" required />
-  <textarea name="message" placeholder="Your Message" required></textarea>
-  <button type="submit">Send Message</button>
-</form>
-
-
-<div id="loader">
-  <div class="spinner"></div>
-</div>
-
-<script>
-  window.addEventListener("load", () => {
-    document.getElementById("loader").style.display = "none";
-  });
-</script>
-
-<div class="sensor-icon">
-  <img src="assets/images/sensor.png" alt="Sensor" />
-</div>
-
-
-<div id="weather-widget">
-  <h3>🌤 Weather in Patiala</h3>
-  <p id="weather-info">Loading...</p>
-</div>
-
-
-
-<script>
-  const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
-  const city = "Patiala";
-
-  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
-    .then(res => res.json())
-    .then(data => {
-      const temp = data.main.temp;
-      const desc = data.weather[0].description;
-      document.getElementById("weather-info").textContent = `${temp}°C, ${desc}`;
-    })
-    .catch(() => {
-      document.getElementById("weather-info").textContent = "Unable to fetch weather.";
-    });
-</script>
