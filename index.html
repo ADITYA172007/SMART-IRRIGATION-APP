@@ -73,3 +73,51 @@
   </footer>
 </body>
 </html>
+
+
+//emailjs use krna  h//
+<form action="https://formsubmit.co/adityaa172007@gmail.com" method="POST">
+  <input type="text" name="name" placeholder="Your Name" required />
+  <input type="email" name="email" placeholder="Your Email" required />
+  <textarea name="message" placeholder="Your Message" required></textarea>
+  <button type="submit">Send Message</button>
+</form>
+
+
+<div id="loader">
+  <div class="spinner"></div>
+</div>
+
+<script>
+  window.addEventListener("load", () => {
+    document.getElementById("loader").style.display = "none";
+  });
+</script>
+
+<div class="sensor-icon">
+  <img src="assets/images/sensor.png" alt="Sensor" />
+</div>
+
+
+<div id="weather-widget">
+  <h3>🌤 Weather in Patiala</h3>
+  <p id="weather-info">Loading...</p>
+</div>
+
+
+
+<script>
+  const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
+  const city = "Patiala";
+
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+    .then(res => res.json())
+    .then(data => {
+      const temp = data.main.temp;
+      const desc = data.weather[0].description;
+      document.getElementById("weather-info").textContent = `${temp}°C, ${desc}`;
+    })
+    .catch(() => {
+      document.getElementById("weather-info").textContent = "Unable to fetch weather.";
+    });
+</script>

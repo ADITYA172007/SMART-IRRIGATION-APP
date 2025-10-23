@@ -107,3 +107,76 @@ footer {
   background: #222;
   color: white;
 }
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+  }
+
+  .features .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow ol, .app ul {
+    padding-left: 1rem;
+  }
+
+  .contact form {
+    padding: 1rem;
+  }
+}
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+section {
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Button hover effect */
+.cta:hover, .contact button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+
+#loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 6px solid #ccc;
+  border-top: 6px solid #28a745;
+  border-radius: 50%;
+  width: 50px; height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.sensor-icon img {
+  width: 80px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
