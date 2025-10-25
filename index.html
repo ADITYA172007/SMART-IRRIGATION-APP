@@ -71,7 +71,7 @@
 
     <!-- Sensor Icon -->
     <div class="sensor-icon">
-      <img src="sensor.png" alt="Sensor" />
+      <img src="assets/images/sensor.png" alt="Sensor" />
     </div>
 
     <!-- Weather Widget -->
@@ -117,13 +117,14 @@
       emailjs.init("ZXs__9flqZ8yveoPc");
     })();
 
-    // Set timestamp
-    document.getElementById("form-time").value = new Date().toLocaleString();
-
     // Send email
     function sendEmail(e) {
       e.preventDefault();
-      emailjs.sendForm("service_gzjld7p", "template_wbop5tf", e.target)
+
+    // Set timestamp
+    document.getElementById("form-time").value = new Date().toLocaleString();
+
+      emailjs.sendForm("service_gzjld7p", "template_nl45gue", e.target, "ZXs__9flqZ8yveoPc")
         .then(() => alert("Message sent!"))
         .catch(() => alert("Failed to send"));
     }
@@ -145,5 +146,4 @@
   </script>
 
 </body>
-
 </html>
