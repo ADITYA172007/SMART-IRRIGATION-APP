@@ -2,148 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Irrigation System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TIET Sports Complex Tracker</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </head>
 <body>
 
-  <!-- Loader -->
-  <div id="loader">
-    <div class="spinner"></div>
-  </div>
-
-  <!-- Header -->
   <header>
-    <nav>
-      <h1>Smart Irrigation</h1>
-      <ul>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#app">Mobile App</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-    <section class="hero">
-      <h2>Smarter Farming Starts Here</h2>
-      <p>Optimize irrigation with real-time weather and sensor data</p>
-      <a href="#app" class="cta">Explore the App</a>
-    </section>
+    <img src="logo.png" alt="TIET Logo" class="logo"/>
+    <h1>TIET Sports Complex Live Tracker</h1>
   </header>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Features -->
-    <section id="features" class="features">
-      <h2>Key Features</h2>
-      <div class="grid">
-        <div>📡 Wireless Sensor Integration</div>
-        <div>🌦 Real-Time Weather Optimization</div>
-        <div>📱 Manual & Automated Control</div>
-        <div>🌱 Crop-Specific Irrigation Plans</div>
-      </div>
-    </section>
+  <section id="courts">
+    <h2>Outdoor Courts</h2>
+    <div class="court-grid" id="badminton"></div>
+    <div class="court-grid" id="tennis"></div>
+    <div class="court-grid" id="basketball"></div>
+    <div class="court-grid" id="volleyball"></div>
+  </section>
 
-    <!-- Workflow -->
-    <section id="how-it-works" class="workflow">
-      <h2>How It Works</h2>
-      <ol>
-        <li>Microcontroller reads sensor data via Arduino IDE or ESP-IDF</li>
-        <li>Data transmitted wirelessly to mobile app</li>
-        <li>Farmers input crop type, field size, preferences</li>
-        <li>App fetches weather data via OpenWeatherMap API</li>
-        <li>App recommends or automates irrigation cycles</li>
-      </ol>
-    </section>
+  <section id="grounds">
+    <h2>Grounds & Facilities</h2>
+    <div class="facility" id="cricket"></div>
+    <div class="facility" id="football"></div>
+    <div class="facility" id="track"></div>
+    <div class="facility" id="swimming"></div>
+    <div class="facility" id="indoor-badminton"></div>
+  </section>
 
-    <!-- App Features -->
-    <section id="app" class="app">
-      <h2>Mobile App Features</h2>
-      <ul>
-        <li>📊 Dashboard with live sensor data</li>
-        <li>🌾 Crop input and field dimensions</li>
-        <li>🌦 Weather sync via OpenWeatherMap</li>
-        <li>🕹 Manual control toggles</li>
-        <li>📈 Monitoring graphs and alerts</li>
-      </ul>
-    </section>
+  <section id="equipment">
+    <h2>🎒 Equipment Room Status</h2>
+    <ul id="equipment-list"></ul>
+  </section>
 
-    <!-- Sensor Icon -->
-    <div class="sensor-icon">
-      <img src="assets/images/sensor.png" alt="Sensor" />
+  <section id="login-section">
+    <h2>🔐 Caretaker Login</h2>
+<form id="login-form" onsubmit="handleLogin(event)">      <input type="password" id="login-password" placeholder="Enter caretaker password" required />
+      <button type="submit">Login</button>
+      <p id="login-error" style="color: red;"></p>
+    </form>
+  </section>
+
+  <section id="caretaker-dashboard" style="display: none;">
+    <h2>🛠️ Caretaker Dashboard</h2>
+
+    <!-- Update Ground Status -->
+    <div>
+      <h3>Update Ground Status</h3>
+      <select id="ground-select">
+        <option value="cricket">Cricket</option>
+        <option value="football">Football</option>
+        <option value="track">Track</option>
+        <option value="swimming">Swimming</option>
+      </select>
+      <select id="ground-status">
+        <option value="open">Open</option>
+        <option value="closed">Closed</option>
+        <option value="maintenance">Under Maintenance</option>
+      </select>
+      <button onclick="updateGround()">Update Ground</button>
     </div>
 
-    <!-- Weather Widget -->
-    <div id="weather-widget">
-      <h3>🌤 Weather in Patiala</h3>
-      <p id="weather-info">Loading...</p>
+    <!-- Update Equipment Inventory -->
+    <div style="margin-top: 20px;">
+      <h3>Update Equipment Inventory</h3>
+      <select id="equipment-name" required>
+        <option value="" disabled selected>Select equipment</option>
+        <option value="Basketball">Basketball</option>
+        <option value="Football">Football</option>
+        <option value="Badminton Racket">Badminton Racket</option>
+        <option value="Tennis Ball">Tennis Ball</option>
+        <option value="Cricket Bat">Cricket Bat</option>
+        <option value="Volleyball">Volleyball</option>
+        <option value="Swimming Goggles">Swimming Goggles</option>
+      </select>
+      <input type="number" id="equipment-count" placeholder="Quantity" required />
+      <button onclick="updateEquipment()">Update Equipment</button>
     </div>
 
-    <!-- Contact Form -->
-    <section id="contact" class="contact">
-      <h2>Contact Us</h2>
-      <form onsubmit="sendEmail(event)">
-        <input type="text" name="name" placeholder="Your Name" required />
-        <input type="email" name="user_email" placeholder="Your Email" required />
-        <textarea name="message" placeholder="Your Message" required></textarea>
-        <input type="text" name="crop_type" placeholder="Crop Type (optional)" />
-        <input type="text" name="field_size" placeholder="Field Size (optional)" />
-        <select name="irrigation_mode">
-          <option value="">Select Irrigation Mode</option>
-          <option value="Manual">Manual</option>
-          <option value="Automated">Automated</option>
-        </select>
-        <input type="hidden" name="time" id="form-time" />
-        <button type="submit">Send Message</button>
-      </form>
-    </section>
-  </main>
+    <!-- Update Player Count -->
+    <div style="margin-top: 20px;">
+      <h3>Update Player Count</h3>
+      <select id="player-location" required>
+        <option value="" disabled selected>Select court or ground</option>
+        <!-- Courts -->
+        <option value="badminton-court-1">Badminton Court 1</option>
+        <option value="badminton-court-2">Badminton Court 2</option>
+        <option value="badminton-court-3">Badminton Court 3</option>
+        <option value="badminton-court-4">Badminton Court 4</option>
+        <option value="tennis-court-1">Tennis Court 1</option>
+        <option value="tennis-court-2">Tennis Court 2</option>
+        <option value="basketball-court-1">Basketball Court 1</option>
+        <option value="basketball-court-2">Basketball Court 2</option>
+        <option value="volleyball-court-1">Volleyball Court 1</option>
+        <option value="volleyball-court-2">Volleyball Court 2</option>
+        <option value="indoor-badminton-court-1">Indoor Badminton Court 1</option>
+        <option value="indoor-badminton-court-2">Indoor Badminton Court 2</option>
+        <!-- Grounds -->
+        <option value="cricket">Cricket Ground</option>
+        <option value="football">Football Ground</option>
+        <option value="track">Track</option>
+        <option value="swimming">Swimming Pool</option>
+      </select>
+      <input type="number" id="player-count" placeholder="Number of players" required />
+      <button onclick="updatePlayerCount()">Update Players</button>
+    </div>
+  </section>
 
-  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Smart Irrigation System. All rights reserved.</p>
+    <div class="footer-content">
+      <p>📍 TIET Sports Complex, Patiala</p>
+      <p>📞 Contact: <a href="tel:+911752123456">+91 1752 123456</a></p>
+      <p>📧 Email: <a href="mailto:sports@tiet.ac.in">sports@tiet.ac.in</a></p>
+      <p>🌐 Website: <a href="https://www.thapar.edu">www.thapar.edu</a></p>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/thapar.edu" target="_blank">Instagram</a> |
+        <a href="https://www.facebook.com/thapar.edu" target="_blank">Facebook</a> |
+        <a href="https://www.linkedin.com/school/thapar-university/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
   </footer>
 
-  <!-- Scripts -->
-  <script>
-    // Hide loader on page load
-    window.addEventListener("load", () => {
-      document.getElementById("loader").style.display = "none";
-    });
-
-    // Initialize EmailJS
-    (function() {
-      emailjs.init("ZXs__9flqZ8yveoPc");
-    })();
-
-    // Send email
-    function sendEmail(e) {
-      e.preventDefault();
-
-    // Set timestamp
-    document.getElementById("form-time").value = new Date().toLocaleString();
-
-      emailjs.sendForm("service_gzjld7p", "template_nl45gue", e.target, "ZXs__9flqZ8yveoPc")
-        .then(() => alert("Message sent!"))
-        .catch(() => alert("Failed to send"));
-    }
-
-    // Fetch weather data
-    const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
-    const city = "Patiala";
-
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
-      .then(res => res.json())
-      .then(data => {
-        const temp = data.main.temp;
-        const desc = data.weather[0].description;
-        document.getElementById("weather-info").textContent = `${temp}°C, ${desc}`;
-      })
-      .catch(() => {
-        document.getElementById("weather-info").textContent = "Unable to fetch weather.";
-      });
-  </script>
-
+  <script src="script.js"></script>
+  
 </body>
 </html>
