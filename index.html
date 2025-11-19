@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Irrigation System</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <h1>Smart Irrigation</h1>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#app">Mobile App</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <section class="hero">
+      <h2>Smarter Farming Starts Here</h2>
+      <p>Optimize irrigation with real-time weather and sensor data</p>
+      <a href="#app" class="cta">Explore the App</a>
+    </section>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Features -->
+    <section id="features" class="features">
+      <h2>Key Features</h2>
+      <div class="grid">
+        <div>📡 Wireless Sensor Integration</div>
+        <div>🌦 Real-Time Weather Optimization</div>
+        <div>📱 Manual & Automated Control</div>
+        <div>🌱 Crop-Specific Irrigation Plans</div>
+      </div>
+    </section>
+
+    <!-- Workflow -->
+    <section id="how-it-works" class="workflow">
+      <h2>How It Works</h2>
+      <ol>
+        <li>Microcontroller reads sensor data via Arduino IDE or ESP-IDF</li>
+        <li>Data transmitted wirelessly to mobile app</li>
+        <li>Farmers input crop type, field size, preferences</li>
+        <li>App fetches weather data via OpenWeatherMap API</li>
+        <li>App recommends or automates irrigation cycles</li>
+      </ol>
+    </section>
+
+    <!-- App Features -->
+    <section id="app" class="app">
+      <h2>Mobile App Features</h2>
+      <ul>
+        <li>📊 Dashboard with live sensor data</li>
+        <li>🌾 Crop input and field dimensions</li>
+        <li>🌦 Weather sync via OpenWeatherMap</li>
+        <li>🕹 Manual control toggles</li>
+        <li>📈 Monitoring graphs and alerts</li>
+      </ul>
+    </section>
+
+    <!-- Sensor Icon -->
+    <div class="sensor-icon">
+      <img src="assets/images/sensor.png" alt="Sensor" />
+    </div>
+
+    <!-- Weather Widget -->
+    <div id="weather-widget">
+      <h3>🌤 Weather in Patiala</h3>
+      <p id="weather-info">Loading...</p>
+    </div>
+
+
+    <div id="forecast">
+  <h3>📅 3-Day Forecast</h3>
+  <ul id="forecast-list"></ul>
+</div>
+
+      <section class="sensor-data">
+  <h2>Sensor Dashboard</h2>
+  <ul>
+    <li>🌡 Soil Moisture: <span id="moisture">--%</span></li>
+    <li>🌬 Temperature: <span id="temp">--°C</span></li>
+    <li>💧 Humidity: <span id="humidity">--%</span></li>
+    <li>🔋 Solar Battery: <span id="battery">--%</span></li>
+    <li>🚿 Water Usage Today: <span id="water-usage">-- L</span></li>
+  </ul>
+</section>
+
+
+      <section class="analytics">
+  <h2>Analytics & Reports</h2>
+  <ul>
+    <li>📉 Water Usage Graph</li>
+    <li>⚡ Electricity Savings Estimate</li>
+    <li>🔧 Maintenance Alerts</li>
+  </ul>
+</section>
+<div id="alerts">
+  <h3>🔔 Alerts</h3>
+  <p id="alert-msg">No alerts currently.</p>
+</div>
+
+
+    <!-- Contact Form -->
+    <section id="contact" class="contact">
+      <h2>Contact Us</h2>
+      <form onsubmit="sendEmail(event)">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="user_email" placeholder="Your Email" required />
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <input type="text" name="crop_type" placeholder="Crop Type (optional)" />
+        <input type="text" name="field_size" placeholder="Field Size (optional)" />
+
+        <input type="text" name="soil_type" placeholder="Soil Type (e.g., loamy)" required />
+        <input type="text" name="region" id="region" placeholder="Region (auto-detected)" readonly />
+
+
+        <select name="irrigation_mode" required>
+  <option value="">Select Irrigation Mode</option>
+  <option value="Manual">Manual</option>
+  <option value="Automated">Automated</option>
+  <option value="Scheduled">Scheduled</option>
+</select>
+
+
+        <select name="irrigation_mode">
+          <option value="">Select Irrigation Mode</option>
+          <option value="Manual">Manual</option>
+          <option value="Automated">Automated</option>
+        </select>
+        <input type="hidden" name="time" id="form-time" />
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Smart Irrigation System. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Hide loader on page load
+    window.addEventListener("load", () => {
+      document.getElementById("loader").style.display = "none";
+    });
+
+    // Initialize EmailJS
+    (function() {
+      emailjs.init("ZXs__9flqZ8yveoPc");
+    })();
+
+
+    navigator.geolocation.getCurrentPosition(pos => {
+  const { latitude, longitude } = pos.coords;
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("region").value = data.address.city || data.address.town || "Unknown";
+    });
+});
+
+
+    // Send email
+    function sendEmail(e) {
+      e.preventDefault();
+
+    // Set timestamp
+    document.getElementById("form-time").value = new Date().toLocaleString();
+
+      emailjs.sendForm("service_gzjld7p", "template_nl45gue", e.target, "ZXs__9flqZ8yveoPc")
+        .then(() => alert("Message sent!"))
+        .catch(() => alert("Failed to send"));
+    }
+
+    // Fetch weather data
+    const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
+    const city = "Patiala";
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+      .then(res => res.json())
+      .then(data => {
+        const temp = data.main.temp;
+        const desc = data.weather[0].description;
+        document.getElementById("weather-info").textContent = `${temp}°C, ${desc}`;
+
+        // Rainfall skip alert logic
+  if (desc.includes("rain")) {
+    document.getElementById("alert-msg").textContent = "Rain forecast detected — irrigation skipped.";
+  }
+
+
+
+      })
+      .catch(() => {
+        document.getElementById("weather-info").textContent = "Unable to fetch weather.";
+      });
+
+
+      fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`)
+  .then(res => res.json())
+  .then(data => {
+    const forecastList = document.getElementById("forecast-list");
+    forecastList.innerHTML = "";
+    for (let i = 0; i < 3; i++) {
+      const item = data.list[i * 8]; // every 24h
+      const date = new Date(item.dt_txt).toDateString();
+      const desc = item.weather[0].description;
+      forecastList.innerHTML += `<li>${date}: ${desc}</li>`;
+    }
+  });
+
+
+  </script>
+
+</body>
+</html>
