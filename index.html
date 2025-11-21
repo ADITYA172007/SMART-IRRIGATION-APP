@@ -6,6 +6,7 @@
   <title>Smart Irrigation System</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -18,6 +19,9 @@
   <header>
     <nav>
       <h1>Smart Irrigation</h1>
+      <div id="alert-bell">
+  🔔
+</div>
       <ul>
         <li><a href="#features">Features</a></li>
         <li><a href="#how-it-works">How It Works</a></li>
@@ -75,13 +79,16 @@
     </div>
 
     <!-- Weather Widget -->
-    <div id="weather-widget">
-      <h3>🌤 Weather in Patiala</h3>
-      <p id="weather-info">Loading...</p>
-    </div>
+    <section id="weather-widget" class="weather-section">
+  <h2>🌤 Live Weather in Patiala</h2>
+  <div class="weather-card">
+    <p><strong>Temperature:</strong> <span id="live-temp">--°C</span></p>
+    <p><strong>Humidity:</strong> <span id="live-humidity">--%</span></p>
+    <p><strong>Condition:</strong> <span id="live-desc">Loading...</span></p>
+  </div>
+</section>
 
-
-    <div id="forecast">
+<div id="forecast">
   <h3>📅 3-Day Forecast</h3>
   <ul id="forecast-list"></ul>
 </div>
@@ -100,8 +107,9 @@
 
       <section class="analytics">
   <h2>Analytics & Reports</h2>
+      <ul><li>📉 Water Usage Graph</li></ul>
+      <canvas id="waterChart" width="400" height="200"></canvas>
   <ul>
-    <li>📉 Water Usage Graph</li>
     <li>⚡ Electricity Savings Estimate</li>
     <li>🔧 Maintenance Alerts</li>
   </ul>
@@ -126,14 +134,7 @@
         <input type="text" name="region" id="region" placeholder="Region (auto-detected)" readonly />
 
 
-        <select name="irrigation_mode" required>
-  <option value="">Select Irrigation Mode</option>
-  <option value="Manual">Manual</option>
-  <option value="Automated">Automated</option>
-  <option value="Scheduled">Scheduled</option>
-</select>
-
-
+        
         <select name="irrigation_mode">
           <option value="">Select Irrigation Mode</option>
           <option value="Manual">Manual</option>
@@ -154,6 +155,40 @@
   <script>
     // Hide loader on page load
     window.addEventListener("load", () => {
+
+document.getElementById("alert-bell").addEventListener("click", () => {
+  document.getElementById("alerts").scrollIntoView({ behavior: "smooth" });
+});
+      
+      const ctx = document.getElementById("waterChart").getContext("2d");
+const waterChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    datasets: [{
+      label: "Water Usage (L)",
+      data: [120, 90, 100, 80, 130, 95, 110],
+      borderColor: "#007bff",
+      backgroundColor: "rgba(0, 123, 255, 0.2)",
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Weekly Water Usage"
+      }
+    }
+  }
+});
+
+
+
+
+
       document.getElementById("loader").style.display = "none";
     });
 
@@ -162,6 +197,7 @@
       emailjs.init("ZXs__9flqZ8yveoPc");
     })();
 
+    
 
     navigator.geolocation.getCurrentPosition(pos => {
   const { latitude, longitude } = pos.coords;
@@ -177,6 +213,7 @@
     function sendEmail(e) {
       e.preventDefault();
 
+
     // Set timestamp
     document.getElementById("form-time").value = new Date().toLocaleString();
 
@@ -186,30 +223,32 @@
     }
 
     // Fetch weather data
-    const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
-    const city = "Patiala";
+const apiKey = "8ef09b8bd1e34933137bbf3a83fafe52";
+const city = "Patiala";
 
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
-      .then(res => res.json())
-      .then(data => {
-        const temp = data.main.temp;
-        const desc = data.weather[0].description;
-        document.getElementById("weather-info").textContent = `${temp}°C, ${desc}`;
+// ✅ Fetch current weather
+fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+  .then(res => res.json())
+  .then(data => {
+    const temp = data.main.temp;
+    const humidity = data.main.humidity;
+    const desc = data.weather[0].description;
 
-        // Rainfall skip alert logic
-  if (desc.includes("rain")) {
-    document.getElementById("alert-msg").textContent = "Rain forecast detected — irrigation skipped.";
-  }
+    document.getElementById("live-temp").textContent = `${temp}°C`;
+    document.getElementById("live-humidity").textContent = `${humidity}%`;
+    document.getElementById("live-desc").textContent = desc;
 
+    if (desc.includes("rain")) {
+      document.getElementById("alert-msg").textContent = "Rain forecast detected — irrigation skipped.";
+    }
+  })
+  .catch(error => {
+    console.error("Weather fetch error:", error);
+    document.getElementById("live-desc").textContent = "Unable to fetch weather.";
+  });
 
-
-      })
-      .catch(() => {
-        document.getElementById("weather-info").textContent = "Unable to fetch weather.";
-      });
-
-
-      fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`)
+// ✅ Fetch 3-Day Forecast
+fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`)
   .then(res => res.json())
   .then(data => {
     const forecastList = document.getElementById("forecast-list");
@@ -220,9 +259,11 @@
       const desc = item.weather[0].description;
       forecastList.innerHTML += `<li>${date}: ${desc}</li>`;
     }
+  })
+  .catch(error => {
+    console.error("Forecast fetch error:", error);
+    document.getElementById("forecast-list").innerHTML = "<li>Unable to fetch forecast.</li>";
   });
-
-
   </script>
 
 </body>
